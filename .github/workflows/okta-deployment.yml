@@ -1,0 +1,44 @@
+name: Deploy Okta Workflow
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment when changes are pushed to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Deploy Okta Workflow
+      env:
+        OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+        OKTA_DOMAIN: ${{ secrets.OKTA_DOMAIN }}
+      run: |
+        # Set API URL and headers
+        API_URL="https://${{ secrets.OKTA_DOMAIN }}/api/v1/workflows"
+        AUTH_HEADER="Authorization: SSWS $OKTA_API_TOKEN"
+        CONTENT_TYPE_HEADER="Content-Type: application/json"
+
+        # Path to the JSON file
+        JSON_FILE="path/to/your/okta-workflow.json"
+
+        # Make the POST request to create or update the workflow
+        curl -X POST $API_URL \
+          -H "$AUTH_HEADER" \
+          -H "$CONTENT_TYPE_HEADER" \
+          -d @$JSON_FILE
+
