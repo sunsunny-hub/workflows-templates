@@ -1,0 +1,45 @@
+name: Okta User Automation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create-okta-user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create Okta User
+        env:
+          OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+          OKTA_DOMAIN: ${{ secrets.OKTA_DOMAIN }}  # Replace with your Okta domain
+        run: |
+          curl -X POST "$OKTA_DOMAIN/api/v1/users?activate=true" \
+            -H "Authorization: SSWS $OKTA_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "profile": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "email": "john.doe@example.com",
+                "login": "john.doe@example.com"
+              }
+            }'
+
+      - name: Verify user creation
+        env:
+          OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+          OKTA_DOMAIN: ${{ secrets.OKTA_DOMAIN }}  # Replace with your Okta domain
+        run: |
+          USER_ID=$(curl -X GET "$OKTA_DOMAIN/api/v1/users?q=john.doe@example.com" \
+            -H "Authorization: SSWS $OKTA_API_TOKEN" | jq '.[0].id' | tr -d '"')
+          
+          if [ -z "$USER_ID" ]; then
+            echo "User not found!"
+            exit 1
+          else
+            echo "User created successfully with ID: $USER_ID"
+          fi
