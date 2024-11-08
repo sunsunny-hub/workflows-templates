@@ -29,7 +29,7 @@ jobs:
         OKTA_DOMAIN: ${{ secrets.OKTA_DOMAIN }}
       run: |
         # Set API URL and headers
-        API_URL="https://${{ secrets.OKTA_DOMAIN }}/api/v1/workflows"
+        API_URL="${{ secrets.OKTA_DOMAIN }}/api/v1/workflows"
         AUTH_HEADER="Authorization:SSWS $OKTA_API_TOKEN"
         CONTENT_TYPE_HEADER="Content-Type:application/json"
 
