@@ -34,7 +34,7 @@ jobs:
         CONTENT_TYPE_HEADER="Content-Type: application/json"
 
         # Path to the JSON file
-        JSON_FILE="path/to/your/okta-workflow.json"
+        JSON_FILE="workflows/add_inactive_users_to_marketo_list_for_remarketing/workflow.json"
 
         # Make the POST request to create or update the workflow
         curl -X POST $API_URL \
