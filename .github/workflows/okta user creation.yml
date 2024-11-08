@@ -2,8 +2,7 @@ name: Okta User Automation
 
 on:
   push:
-    branches:
-      - master
+
 
 jobs:
   create-okta-user:
