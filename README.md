@@ -1,4 +1,4 @@
-# Overview
+# Overview.
 
 Welcome to Templates for Workflows!
 
